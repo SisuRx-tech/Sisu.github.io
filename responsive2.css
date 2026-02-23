@@ -1,0 +1,184 @@
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+/* Tablets (portrait/landscape) */
+@media (max-width: 1024px) {
+  .intro {
+    height: auto;
+    text-align: center;
+    padding: 20px;
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 80px;
+  }
+
+  .profileimage img {
+    width: 220px;
+    height: 220px;
+    float: none;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .container {
+    width: 90%;
+    margin: 20px auto;
+    height: auto;
+  }
+
+  .outerbox {
+    width: 300px;
+    height: auto;
+    flex-direction: column;
+    border: none;
+    box-shadow: none;
+  }
+
+  .outerbox .innerbox {
+    width: 90%;
+    margin: 10px auto;
+  }
+.middle{
+    margin-left: 50px;
+}
+  textarea {
+    width: 90%;
+  }
+
+  .reach {
+    gap: 40px;
+  }
+  button{
+    margin-bottom: 30px;
+  }
+}
+
+/* Phones (up to 768px) */
+@media (max-width: 768px) {
+  .topbar {
+    height: 50px;
+    width: 95%;
+    margin: auto auto;
+    margin-left: 1%;
+  }
+
+  .menu-icon {
+    font-size: 26px;
+    padding: 12px 15px;
+  }
+
+  .intro {
+    padding: 10px;
+    margin-top: 50px;
+    width: 90%;
+
+    margin-top: 70px;
+    margin: 80px auto 20px ;
+    height: auto;
+    min-height: 150px;
+  }
+
+  .profileimage img {
+    width: 180px;
+    height: 180px;
+  }
+.container{
+  width: 95%;
+  margin: 0 auto;
+}
+  .container p {
+    font-size: medium;
+  }
+
+  .container a {
+    font-size: large;
+  }
+
+  .outerbox {
+    width: 300px;
+  }
+
+  .outerbox .innerbox {
+    width: 95%;
+    margin: auto;
+  }
+  .top p{
+    font-size: 25px;
+  }
+.middle a{
+width: 95%;
+margin: auto;
+}
+.middle img{
+width: 170px;
+height: 130px;
+ margin-right: 42px;
+}
+  textarea {
+    width: 250px;
+    height: 50px;
+    box-shadow: 0 0 8px gray;
+  }
+
+  .reach {
+    flex-wrap: wrap;
+    gap: 25px;
+  }
+
+  .reach a {
+    width: 45px;
+    height: 45px;
+  }
+  button{
+    margin-bottom: 30px;
+  }
+    .p-text p{
+    font-size: 25px;
+  }
+}
+
+/* Small Phones (up to 480px) */
+@media (max-width: 480px) {
+  .intro {
+    margin-top: 75px;
+    font-size: small;
+    min-height: fit-content;
+  }
+
+  .profileimage img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .container {
+ 
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .outerbox {
+    flex-direction: column;
+    align-items: center;
+    max-height: max-content;
+  }
+
+  .outerbox .innerbox {
+    width: 100%;
+max-height: max-content;
+  }
+  .middle{
+    margin-left: 50px;
+  }
+
+  .footer p {
+    font-size: medium;
+  }
+
+  .reach {
+    gap: 20px;
+  }
+
+  .copy-right {
+    font-size: small;
+  }
+
+}

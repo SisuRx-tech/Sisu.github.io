@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="learnjs .css" />
+    <link rel="stylesheet" href="responsive2.css" />
+    <script src="https://kit.fontawesome.com/4a2e0c714a.js" crossorigin="anonymous"></script>
+
+    <style>
+      #overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        background: transparent;
+      }
+
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-60px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes slideUp {
+        from { opacity: 0; transform: translateY(60px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes slideRight {
+        from { opacity: 0; transform: translateX(-80px); }
+        to   { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+
+      .topbar        { animation: slideDown 0.6s ease forwards; }
+      .intro         { animation: slideRight 0.7s ease 0.3s both; }
+      .profileimage img { animation: fadeIn 0.8s ease 0.6s both; }
+      .container     { animation: slideUp 0.7s ease 0.5s both; }
+      footer         { animation: slideUp 0.7s ease 0.8s both; }
+
+      /* ===== CARD STACK ===== */
+      .stack-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0 30px 0;
+      }
+
+      .stack-scene {
+        position: relative;
+        width: 220px;
+        height: 330px;
+        margin-bottom: 10px;
+        touch-action: pan-y;
+      }
+
+      .stack-card {
+        position: absolute;
+        width: 210px;
+        border-radius: 20px;
+        overflow: hidden;
+        background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+        border: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease;
+        will-change: transform, opacity;
+        top: 0;
+        left: 5px;
+        cursor: pointer;
+      }
+
+      .stack-card:nth-child(1) {
+        transform: translateY(0px) scale(1);
+        z-index: 4;
+        box-shadow: 0 0 30px rgba(255,255,255,0.12), 0 15px 40px rgba(0,0,0,0.7);
+      }
+      .stack-card:nth-child(2) {
+        transform: translateY(10px) scale(0.95);
+        z-index: 3;
+        opacity: 0.7;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      }
+      .stack-card:nth-child(3) {
+        transform: translateY(18px) scale(0.90);
+        z-index: 2;
+        opacity: 0.45;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      }
+      .stack-card:nth-child(4) {
+        transform: translateY(24px) scale(0.85);
+        z-index: 1;
+        opacity: 0.25;
+        box-shadow: none;
+      }
+
+      .stack-card.fly-left {
+        transform: translateX(-130%) rotate(-10deg) !important;
+        opacity: 0 !important;
+        transition: transform 0.35s ease, opacity 0.25s ease !important;
+      }
+
+      .stack-card.fly-right {
+        transform: translateX(130%) rotate(10deg) !important;
+        opacity: 0 !important;
+        transition: transform 0.35s ease, opacity 0.25s ease !important;
+      }
+
+      .stack-card:nth-child(1)::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        background: linear-gradient(135deg, transparent, rgba(255,255,255,0.25), transparent);
+        background-size: 300% 300%;
+        animation: shimmerBorder 2.5s linear infinite;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      @keyframes shimmerBorder {
+        0%   { background-position: 0% 0%; }
+        100% { background-position: 300% 300%; }
+      }
+
+      .card-top {
+        background: linear-gradient(90deg, #222, #444, #222);
+        background-size: 200% 100%;
+        animation: topShimmer 2.5s linear infinite;
+        padding: 12px 0;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
+      @keyframes topShimmer {
+        0%   { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      .card-top p {
+        color: white;
+        font-weight: bold;
+        font-size: 14px;
+        margin: 0;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .card-middle {
+        padding: 12px;
+        flex-shrink: 0;
+      }
+
+      .card-middle img {
+        width: 100%;
+        height: 115px;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+        pointer-events: none;
+      }
+
+      .card-bottom {
+        padding: 12px;
+        background: rgba(0,0,0,0.4);
+        flex: 1;
+      }
+
+      .card-bottom p {
+        font-size: 12px;
+        color: rgba(255,255,255,0.85);
+        line-height: 1.6;
+        margin: 0;
+        text-align: center;
+      }
+
+      /* Open link button on top card */
+      .card-link {
+        display: block;
+        margin: 10px 12px 12px 12px;
+        padding: 8px;
+        text-align: center;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border: 1px solid rgba(255,255,255,0.15);
+        flex-shrink: 0;
+        transition: background 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .card-link:active {
+        background: rgba(255,255,255,0.25);
+      }
+    </style>
+  </head>
+  <body class="body">
+
+    <div id="overlay"></div>
+
+    <div class="topbar">
+      <input type="checkbox" id="menu-toggle" />
+      <label for="menu-toggle" class="menu-icon">&#9776;</label>
+      <nav class="sidebar">
+        <a href="#home"      onclick="closeMenu()"><i class="fas fa-home fa-l"></i>   Home</a>
+        <a href="#about"     onclick="closeMenu()"><i class="fas fa-user fa-l"></i>   About</a>
+        <a href="#portfolio" onclick="closeMenu()"><i class="fas fa-briefcase fa-l"></i>  Portfolio</a>
+        <a href="#comments"  onclick="closeMenu()"><i class="fas fa-envelope fa-l"></i>  Comments</a>
+        <a href="#contact"   onclick="closeMenu()"><i class="fas fa-phone fa-l"></i>  Contact</a>
+      </nav>
+    </div>
+
+    <main class="main">
+      <header class="header" id="home">
+        <div class="intro">
+          <div class="profileimage">
+            <img src="IMG-20250124-WA0000f.jpg" alt="" />
+            <div class="text">
+              <p style="font-size: 50px">Hi there !!</p>
+              <p style="color: black; display: inline-block; vertical-align: baseline;">
+                <span style="font-size: 40px">I'm</span>
+                <span style="font-size: xxx-large; color: black">Bamilosin Jesutobi Michael,</span>
+              </p>
+              <p style="color: black; font-size: 30px">
+                A certified Front end
+                <span style="font-size: xx-large; color: lightgray">WEB DEVOLOPER</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="container" id="about">
+        <div class="p-text"><p>About Me</p></div>
+        <p>Hi, i'm Michael popularly known as Sisu -a passionante learner with a unique mix of skills and interests.</p>
+        <p>My skills dive deep into the fundamentals of front-end development, desgining, solving website problems and also bringing creative ideas to life through code.</p>
+
+        <div class="skill"><a href="#"></a></div>
+        <div class="line"></div>
+
+        <div class="portfolio" id="portfolio">
+          <div class="p-text"><p>My Projects</p></div>
+          <p>Take a look at my latest Projects</p>
+
+          <div class="stack-wrapper">
+            <div class="stack-scene" id="stackScene">
+
+              <div class="stack-card">
+                <div class="card-top"><p>Postly</p></div>
+                <div class="card-middle">
+                  <img src="eere.png" alt="Postly" />
+                </div>
+                <div class="card-bottom">
+                  <p>Postly is a facebook demo showcasing a clean interface with interactive elements designed to highlight key features and user experience.</p>
+                </div>
+                <a class="card-link" href="facebookdemo.html">Open Project ↗</a>
+              </div>
+
+              <div class="stack-card">
+                <div class="card-top"><p>Project 2</p></div>
+                <div class="card-middle">
+                  <img src="eere.png" alt="Project 2" />
+                </div>
+                <div class="card-bottom">
+                  <p>Description for your second project. Replace with your real details.</p>
+                </div>
+                <a class="card-link" href="facebookdemo.html">Open Project ↗</a>
+              </div>
+
+              <div class="stack-card">
+                <div class="card-top"><p>Project 3</p></div>
+                <div class="card-middle">
+                  <img src="eere.png" alt="Project 3" />
+                </div>
+                <div class="card-bottom">
+                  <p>Description for your third project. Replace with your real details.</p>
+                </div>
+                <a class="card-link" href="facebookdemo.html">Open Project ↗</a>
+              </div>
+
+              <div class="stack-card">
+                <div class="card-top"><p>Project 4</p></div>
+                <div class="card-middle">
+                  <img src="eere.png" alt="Project 4" />
+                </div>
+                <div class="card-bottom">
+                  <p>Description for your fourth project. Replace with your real details.</p>
+                </div>
+                <a class="card-link" href="facebookdemo.html">Open Project ↗</a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <section class="comment-section" id="comments">
+  <div class="line"></div>
+  <h2>Leave a Comment</h2>
+  <p>Have thoughts about my work? Leave a message!</p>
+  <textarea id="commentBox" placeholder="Write your comment here..."></textarea>
+  <br />
+  <div style="display:flex; gap:10px; margin-top:10px;">
+    <button onclick="sendToGmail()">📧 Send via Gmail</button>
+    <button onclick="sendToWhatsApp()">💬 Send via WhatsApp</button>
+  </div>
+</section>
+      </div>
+    </main>
+
+    <footer>
+      <div id="contact" class="footer">
+        <p>CONTACT ME :</p>
+      </div>
+      <div class="reach">
+        <a href="https://mail.google.com/mail/?view=cmf&fs=1&to=itzteeboyz@gmail.com" target="_blank">
+          <i class="fas fa-envelope fa-xl"></i>
+        </a>
+        <a href="#"><i class="fab fa-linkedin-in fa-xl"></i></a>
+        <a href="https://x.com/Sisu_Rx" target="_blank">
+          <i class="fab fa-x-twitter fa-xl"></i>
+        </a>
+        <a href="tel:+2349075982598"><i class="fas fa-phone fa-xl"></i></a>
+      </div>
+      <div class="copy-right">
+        <p>&copy; Copyrights 2025</p>
+        <p>@SisuRx</p>
+      </div>
+    </footer>
+
+    <script>
+      /* Sidebar */
+      const toggle = document.getElementById('menu-toggle');
+      const overlay = document.getElementById('overlay');
+      toggle.addEventListener('change', function () {
+        overlay.style.display = this.checked ? 'block' : 'none';
+      });
+      overlay.addEventListener('click', function () {
+        toggle.checked = false;
+        overlay.style.display = 'none';
+      });
+      function closeMenu() {
+        toggle.checked = false;
+        overlay.style.display = 'none';
+      }
+
+      /* Card Stack */
+      const scene = document.getElementById('stackScene');
+      let busy = false;
+      let startX = 0;
+      let startY = 0;
+
+      function getCards() {
+        return Array.from(scene.querySelectorAll('.stack-card'));
+      }
+
+      function next() {
+        if (busy) return;
+        busy = true;
+        const cards = getCards();
+        const top = cards[0];
+        top.classList.add('fly-left');
+        setTimeout(() => {
+          top.classList.remove('fly-left');
+          scene.appendChild(top);
+          busy = false;
+        }, 350);
+      }
+
+      function prev() {
+        if (busy) return;
+        busy = true;
+        const cards = getCards();
+        const last = cards[cards.length - 1];
+        last.style.transition = 'none';
+        last.classList.add('fly-right');
+        scene.insertBefore(last, cards[0]);
+        last.getBoundingClientRect();
+        last.style.transition = '';
+        last.classList.remove('fly-right');
+        setTimeout(() => { busy = false; }, 350);
+      }
+
+      /* Swipe — correct direction */
+      scene.addEventListener('touchstart', e => {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }, { passive: true });
+
+      scene.addEventListener('touchend', e => {
+        const diffX = startX - e.changedTouches[0].clientX;
+        const diffY = Math.abs(startY - e.changedTouches[0].clientY);
+        // Only trigger if mostly horizontal swipe
+        if (Math.abs(diffX) > 40 && diffY < 60) {
+          if (diffX > 0) next();  // swipe left = next
+          else prev();             // swipe right = prev
+        }
+      }, { passive: true });
+
+      /* Tap non-top card to bring it forward */
+      scene.addEventListener('click', e => {
+        // Don't intercept link clicks
+        if (e.target.closest('.card-link')) return;
+
+        const clicked = e.target.closest('.stack-card');
+        if (!clicked) return;
+        const cards = getCards();
+        if (clicked === cards[0]) return;
+        const index = cards.indexOf(clicked);
+        for (let i = 0; i < index; i++) {
+          setTimeout(() => next(), i * 370);
+        }
+      });
+      function sendToGmail() {
+  const comment = document.getElementById('commentBox').value.trim();
+  if (!comment) { alert('Please write a comment first!'); return; }
+  const subject = encodeURIComponent('New Comment from Portfolio');
+  const body = encodeURIComponent(comment);
+  window.open(`https://mail.google.com/mail/?view=cm&to=itzteeboyz@gmail.com&su=${subject}&body=${body}`, '_blank');
+}
+
+function sendToWhatsApp() {
+  const comment = document.getElementById('commentBox').value.trim();
+  if (!comment) { alert('Please write a comment first!'); return; }
+  const text = encodeURIComponent('New Portfolio Comment:\n' + comment);
+  window.location.href = `https://wa.me/2349075982598?text=${text}`;
+}
+    </script>
+
+  </body>
+</html>
